@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  .pokedex_wrapper {
+    width: 100%;
+    height: auto;
+    background-color: red;
+    display: flex;
+    justify-content: flex-end;
+    overflow: hidden;
+    margin-bottom: 10px;
+  }
+.pokedex_imagem {
+width: 20%;
+}
+
+.pokedex_container {
+width: 80%;
+color: white;
+font-family: "Arial";
+font-size: 10pt;
+padding: 8px;
+}
+
+.pokedex_img {
+width: 100px;
+height: auto;
+}
+</style>
+
+</head>
+<body>
+    <button onclick="playPokemonMusic()">Reproduzir Música de Pokémon</button>
+
+    <div id="player"></div>
+<button id="registrarPokemon">Registrar Pokémon</button>
+<p>
+  Nome: <input type="text" id="nome_pokemon" /><br />
+</p>
+<template id="modelo">
+  <div class="pokedex_wrapper">
+    <img class="pokedex_img" src="" alt="Imagem do Pokémon">
+    <div class="pokedex_container">
+      <span class="nome_pokemon">Nome: </span><br />
+      <span class="tipo_pokemon">Tipo: </span><br />
+      <span class="nivel_pokemon">Nível: </span><br />
+      <span class="descricao_pokemon">Descrição: </span><br />
+    </div>
+  </div>
+</template>
+<script>
+ const pokedex = {
+  bulbasaur: { 
+    tipo: "Grama/Venenoso", 
+    nivel: 5, 
+    descricao: "Uma semente de planta está nas suas costas desde o dia que nasceu. A planta cresce lentamente.", 
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/001.png" 
+  },
+  ivysaur: { 
+    tipo: "Grama/Venenoso", 
+    nivel: 16, 
+    descricao: "Quando o broto em suas costas cresce, parece perder a capacidade de se manter sobre as patas traseiras.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/002.png"
+  },
+  venusaur: { 
+    tipo: "Grama/Venenoso", 
+    nivel: 32, 
+    descricao: "Sua planta floresce quando está absorvendo energia solar. É sempre visto buscando a luz do sol.", 
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/003.png" 
+  },
+  charmander: { 
+    tipo: "Fogo", 
+    nivel: 5, 
+    descricao: "Tem preferência por coisas quentes. Quando chove, diz-se que o vapor jorra da ponta de sua cauda.", 
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/004.png"
+  },
+  charmeleon: { 
+    tipo: "Fogo", 
+    nivel: 16, 
+    descricao: "Tem uma personalidade brutal. Ele ataca com garras afiadas e faz com que a temperatura de seu corpo suba.", 
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/005.png"
+  },
+  charizard: { 
+    tipo: "Fogo/Voador", 
+    nivel: 36, 
+    descricao: "Expira fogo quente o suficiente para derreter rochas. Pode causar incêndios florestais soprando chamas.", 
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/006.png"
+  },
+  squirtle: {
+    tipo: "Água",
+    nivel: 5,
+    descricao: "Quando retrai seu longo pescoço em sua concha, esguicha água com força vigorosa.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/007.png"
+  },
+  wartortle: {
+    tipo: "Água",
+    nivel: 16,
+    descricao: "Costuma bater na cabeça ao nadar à alta velocidade.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/008.png"
+  },
+  blastoise: {
+    tipo: "Água",
+    nivel: 36,
+    descricao: "A força de seu jato d'água é capaz de perfurar aço.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/009.png"
+  },
+  caterpie: {
+    tipo: "Inseto",
+    nivel: 3,
+    descricao: "Para proteção, libera um fedor horrível de suas antenas no topo da cabeça para afastar inimigos.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/010.png"
+  },
+  metapod: {
+    tipo: "Inseto",
+    nivel: 7,
+    descricao: "Estar imobilizado torna o Metapod fácil de capturar e manter como troféu.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/011.png"
+  },
+  butterfree: {
+    tipo: "Inseto/Voador",
+    nivel: 10,
+    descricao: "Na busca por mel, visita várias flores e acaba polinizando-as.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/012.png"
+  },
+  weedle: {
+    tipo: "Inseto/Venenoso",
+    nivel: 3,
+    descricao: "Ele sempre procura folhas para comer. Com seus pés, ele sente a localização das folhas, mesmo no escuro.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/013.png"
+  },
+  kakuna: {
+    tipo: "Inseto/Venenoso",
+    nivel: 7,
+    descricao: "Embora esteja imóvel, ele é capaz de liberar seu ferrão para atacar quando ameaçado.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/014.png"
+  },
+  beedrill: {
+    tipo: "Inseto/Venenoso",
+    nivel: 10,
+    descricao: "Voa rapidamente, atacando usando seu ferrão venenoso em suas patas dianteiras e outro ferrão em seu abdômen.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/015.png"
+  },
+  pidgey: {
+    tipo: "Normal/Voador",
+    nivel: 2,
+    descricao: "Muito dócil. Se for atacado, vira e fere seus inimigos com suas penas. Sempre retorna para seu ninho.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/016.png"
+  },
+  pidgeotto: {
+    tipo: "Normal/Voador",
+    nivel: 18,
+    descricao: "Esse Pokémon territorial defende seu território em uma luta intensa, voando em alta velocidade para atacar.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/017.png"
+  },
+  pidgeot: {
+    tipo: "Normal/Voador",
+    nivel: 36,
+    descricao: "Com suas asas poderosas, ataca seus inimigos. Pode voar a uma velocidade de duas vezes a velocidade do som.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/018.png"
+  },
+  rattata: {
+    tipo: "Normal",
+    nivel: 2,
+    descricao: "Mordidas poderosas e uma alta taxa de reprodução tornam-no um invasor próspero.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/019.png"
+  },
+  raticate: {
+    tipo: "Normal",
+    nivel: 20,
+    descricao: "Dentes incisivos crescem continuamente, roem objetos duros para desgastá-los.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/020.png"
+  },
+  spearow: {
+    tipo: "Normal/Voador",
+    nivel: 2,
+    descricao: "Possui asas curtas, mas poderosas. Prefere atacar em bandos.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/021.png"
+  },
+  fearow: {
+    tipo: "Normal/Voador",
+    nivel: 20,
+    descricao: "Com seu longo pescoço, pode capturar presas de longe.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/022.png"
+  },
+  ekans: {
+    tipo: "Venenoso",
+    nivel: 2,
+    descricao: "Usa seu corpo para capturar presas, enrolando-se em volta delas.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/023.png"
+  },
+  arbok: {
+    tipo: "Venenoso",
+    nivel: 22,
+    descricao: "O padrão em sua barriga muda de aparência, dependendo da região.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/024.png"
+  },
+  pikachu: {
+    tipo: "Elétrico",
+    nivel: 5,
+    descricao: "Bolsas elétricas nas bochechas armazenam eletricidade. Fica enérgico durante trovoadas.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/025.png"
+  },
+  raichu: {
+    tipo: "Elétrico",
+    nivel: 20,
+    descricao: "Suas descargas elétricas podem causar paradas cardíacas em humanos.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/026.png"
+  },
+  sandshrew: {
+    tipo: "Terrestre",
+    nivel: 5,
+    descricao: "Pode enrolar-se em uma bola para se proteger. Preferem áreas secas.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/027.png"
+  },
+  sandslash: {
+    tipo: "Terrestre",
+    nivel: 22,
+    descricao: "Com suas garras afiadas, cava tocas e enfrenta predadores.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/028.png"
+  },
+  nidoran_f: {
+    tipo: "Venenoso",
+    nivel: 5,
+    descricao: "Sensível ao menor som. Defende-se com veneno liberado por sua pele.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/029.png"
+  },
+  nidorina: {
+    tipo: "Venenoso",
+    nivel: 16,
+    descricao: "Muito cuidadosa com seus filhotes. Ataca ferozmente quando ameaçada.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/030.png"
+  },
+  nidoqueen: {
+    tipo: "Venenoso/Terrestre",
+    nivel: 36,
+    descricao: "Fortalece seu corpo com pele dura e escamas para enfrentar adversários.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/031.png"
+  },
+  nidoran_m: {
+    tipo: "Venenoso",
+    nivel: 5,
+    descricao: "Seus grandes ouvidos o tornam sensível ao menor som. Libera veneno ao morder.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/032.png"
+  },
+  nidorino: {
+    tipo: "Venenoso",
+    nivel: 16,
+    descricao: "Muito territorial e agressivo. Suas chifradas liberam veneno potente.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/033.png"
+  },
+  nidoking: {
+    tipo: "Venenoso/Terrestre",
+    nivel: 36,
+    descricao: "Com sua força bruta e chifres venenosos, domina o território ao seu redor.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/034.png"
+  },
+  clefairy: {
+    tipo: "Fada",
+    nivel: 5,
+    descricao: "Costuma dançar sob a lua cheia. Diz-se que traz boa sorte.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/035.png"
+  },
+  clefable: {
+    tipo: "Fada",
+    nivel: 16,
+    descricao: "Muito raro e tímido. Acredita-se que ouvir seu canto traz paz.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/036.png"
+  },
+  vulpix: {
+    tipo: "Fogo",
+    nivel: 5,
+    descricao: "Com seis caudas, é capaz de gerar calor suficiente para queimar qualquer coisa.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/037.png"
+  },
+  ninetales: {
+    tipo: "Fogo",
+    nivel: 16,
+    descricao: "Diz-se que vive por mil anos. Suas nove caudas são imbuídas de poderes místicos.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/038.png"
+  },
+  jigglypuff: {
+    tipo: "Normal/Fada",
+    nivel: 5,
+    descricao: "Seu canto hipnotiza os ouvintes, fazendo-os adormecer.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/039.png"
+  },
+  wigglytuff: {
+    tipo: "Normal/Fada",
+    nivel: 16,
+    descricao: "Seu corpo é incrivelmente elástico e macio. Pode se inflar a um tamanho enorme.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/040.png"
+  },
+  zubat: {
+    tipo: "Venenoso/Voador",
+    nivel: 5,
+    descricao: "Sem olhos, navega usando ondas sonoras. Prefere a escuridão das cavernas.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/041.png"
+  },
+  golbat: {
+    tipo: "Venenoso/Voador",
+    nivel: 22,
+    descricao: "Drenam o sangue de suas presas com suas presas afiadas.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/042.png"
+  },
+  oddish: {
+    tipo: "Grama/Venenoso",
+    nivel: 5,
+    descricao: "Sai do solo à noite para absorver a luz da lua. Suas folhas liberam toxinas.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/043.png"
+  },
+  gloom: {
+    tipo: "Grama/Venenoso",
+    nivel: 21,
+    descricao: "Produz um cheiro terrível. Prefere ambientes úmidos.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/044.png"
+  },
+  vileplume: {
+    tipo: "Grama/Venenoso",
+    nivel: 36,
+    descricao: "Suas pétalas liberam esporos venenosos. Dança para espalhá-los.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/045.png"
+  },
+  paras: {
+    tipo: "Inseto/Grama",
+    nivel: 5,
+    descricao: "Fungos parasitam seu corpo. Cava no solo para procurar nutrientes.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/046.png"
+  },
+  parasect: {
+    tipo: "Inseto/Grama",
+    nivel: 24,
+    descricao: "Fungos cresceram e controlam todo seu corpo. Alimenta-se de nutrientes de árvores.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/047.png"
+  },
+  venonat: {
+    tipo: "Inseto/Venenoso",
+    nivel: 5,
+    descricao: "Olhos grandes detectam movimentos mesmo no escuro. Prefere ambientes úmidos.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/048.png"
+  },
+  venomoth: {
+    tipo: "Inseto/Venenoso",
+    nivel: 31,
+    descricao: "Suas asas liberam pó venenoso. Prefere a escuridão para caçar.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/049.png"
+  },
+  articuno: { 
+    tipo: "Gelo/Voador", 
+    nivel: 50, 
+    descricao: "Um lendário pássaro Pokémon que controla o gelo. Acompanhar sua visão traz neve.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/144.png" 
+  },
+  zapdos: { 
+    tipo: "Elétrico/Voador", 
+    nivel: 50, 
+    descricao: "Um lendário pássaro Pokémon que tem controle sobre a eletricidade. Dizem que vive em nuvens de tempestade.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/145.png" 
+  },
+  moltres: { 
+    tipo: "Fogo/Voador", 
+    nivel: 50, 
+    descricao: "Um lendário pássaro Pokémon. Diz-se que sua aparição marca o fim do inverno.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/146.png" 
+  },
+  mewtwo: { 
+    tipo: "Psíquico", 
+    nivel: 70, 
+    descricao: "Um Pokémon criado por engenharia genética. Seu poder psíquico é imenso.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/150.png" 
+  },
+  mew: { 
+    tipo: "Psíquico", 
+    nivel: 50, 
+    descricao: "Dizem que possui o DNA de todos os Pokémon. É capaz de aprender qualquer movimento.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/151.png" 
+  },
+  riolu: {
+    tipo: "Lutador",
+    nivel: 5,
+    descricao: "Usa as ondas emitidas por todos os seres vivos para determinar a localização de seus aliados e inimigos.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/447.png"
+  },
+  lucario: {
+    tipo: "Lutador/Metálico",
+    nivel: 32,
+    descricao: "Detecta auras para ler os pensamentos de seus oponentes e prever seus movimentos.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/448.png"
+  },
+  torchic: {
+    tipo: "Fogo",
+    nivel: 5,
+    descricao: "Ele pode atirar bolas de fogo de sua boca com até 1.000 graus Celsius.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/255.png"
+  },
+  combusken: {
+    tipo: "Fogo/Lutador",
+    nivel: 16,
+    descricao: "Ele solta chutes a uma velocidade vertiginosa, capazes de quebrar até rochas.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/256.png"
+  },
+  blaziken: {
+    tipo: "Fogo/Lutador",
+    nivel: 36,
+    descricao: "Suas chamas nos pulsos queimam com ferocidade. Pode fazer chutes que parecem meteoros em chamas.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/257.png"
+  },
+ entei: { 
+    tipo: "fogo", 
+    nivel: 50, 
+    descricao: "Um cão lendario Pokémon que controla o fogo. criado por ho.",
+    imagem: "https://static.wikia.nocookie.net/pokemon-quest/images/0/0a/Entei.png/revision/latest?cb=20131025162129"
+    },
+    snorlax: {
+    tipo: "Normal",
+    nivel: 30,
+    descricao: "Extremamente preguiçoso. Quando não está dormindo, passa o tempo comendo e dormindo.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/143.png"
+  },
+  dragonite: {
+    tipo: "Dragão/Voador",
+    nivel: 55,
+    descricao: "Seu corpo pode derreter gelo apenas com sua respiração. Considerado o mestre dos céus.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/149.png"
+  },
+  gengar: {
+    tipo: "Fantasma/Venenoso",
+    nivel: 45,
+    descricao: "Causa arrepios nos inimigos com seu humor macabro. Pode se esconder na sombra dos outros.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/094.png"
+  },
+  alakazam: {
+    tipo: "Psíquico",
+    nivel: 40,
+    descricao: "Possui um QI extremamente alto. Seus poderes psíquicos são tão fortes que pode dobrar colheres com a mente.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/065.png"
+  },
+  machamp: {
+    tipo: "Lutador",
+    nivel: 40,
+    descricao: "Tem uma força incrível. Pode lançar 1.000 socos em apenas dois segundos.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/068.png"
+  },
+  moltres: {
+    tipo: "Fogo/Voador",
+    nivel: 50,
+    descricao: "Um lendário pássaro Pokémon. Diz-se que sua aparição marca o fim do inverno.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/146.png"
+  },
+  raikou: {
+    tipo: "Elétrico",
+    nivel: 50,
+    descricao: "Um cão lendário Pokémon que controla a eletricidade. Diz-se que corre pelos céus em tempestades.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/243.png"
+  },
+  suicune: {
+    tipo: "Água",
+    nivel: 50,
+    descricao: "Um cão lendário Pokémon que personifica a pureza da água. Pode purificar águas poluídas.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/245.png"
+  },
+  lugia: {
+    tipo: "Psíquico/Voador",
+    nivel: 70,
+    descricao: "Um lendário Pokémon que vive nos abismos do oceano. Sua asa bate com o som de ondas quebrando.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/249.png"
+  },
+  ho_oh: {
+    tipo: "Fogo/Voador",
+    nivel: 70,
+    descricao: "Um lendário pássaro Pokémon que ressuscita os mortos e concede felicidade eterna.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/250.png"
+  },
+  celebi: {
+    tipo: "Psíquico/Grama",
+    nivel: 50,
+    descricao: "Um Pokémon viajante do tempo que traz cura e renovação a florestas devastadas.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/251.png"
+  },
+  regirock: {
+    tipo: "Pedra",
+    nivel: 40,
+    descricao: "Um Pokémon de pedra viva que defende uma caverna secreta. Muito resistente.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/377.png"
+  },
+  regice: {
+    tipo: "Gelo",
+    nivel: 40,
+    descricao: "Feito de gelo sólido, este Pokémon pode congelar seu próprio corpo para resistir a ataques.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/378.png"
+  },
+  registeel: {
+    tipo: "Metálico",
+    nivel: 40,
+    descricao: "Construído com uma liga metálica especial, este Pokémon é virtualmente indestrutível.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/379.png"
+  },
+  latias: {
+    tipo: "Dragão/Psíquico",
+    nivel: 50,
+    descricao: "Um Pokémon que pode se comunicar telepaticamente. Protege a equipe que considera amigável.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/380.png"
+  },
+  latios: {
+    tipo: "Dragão/Psíquico",
+    nivel: 50,
+    descricao: "Usa sua visão aguçada para enxergar através de objetos a quilômetros de distância.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/381.png"
+  },
+  kyogre: {
+    tipo: "Água",
+    nivel: 70,
+    descricao: "Um lendário Pokémon que tem o poder de controlar o mar. Sua presença pode fazer o clima mudar.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/382.png"
+  },
+  groudon: {
+    tipo: "Terrestre",
+    nivel: 70,
+    descricao: "Um lendário Pokémon que tem o poder de expandir os continentes. Seu rugido pode causar terremotos.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/383.png"
+  },
+  rayquaza: {
+    tipo: "Dragão/Voador",
+    nivel: 70,
+    descricao: "Um lendário Pokémon que voa pelos céus. Controla o clima e protege o mundo.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/384.png"
+  },
+  jirachi: {
+    tipo: "Metálico/Psíquico",
+    nivel: 50,
+    descricao: "Um lendário Pokémon que concede desejos. Dorme profundamente na maioria do tempo.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/385.png"
+  },
+  deoxys: {
+    tipo: "Psíquico",
+    nivel: 70,
+    descricao: "Um Pokémon que veio do espaço exterior. Seus diferentes formatos alteram seus poderes.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/386.png"
+  },
+  gallade: {
+    tipo: "Psíquico/Lutador",
+    nivel: 30,
+    descricao: "Tem a habilidade de prever movimentos inimigos. Usa lâminas em seus cotovelos para lutar.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/475.png"
+  },
+  scizor: {
+    tipo: "Inseto/Metálico",
+    nivel: 30,
+    descricao: "Corta ferro com suas garras poderosas. Tem uma defesa muito alta.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/212.png"
+  },
+  salamence: {
+    tipo: "Dragão/Voador",
+    nivel: 50,
+    descricao: "Um Pokémon que pode voar a velocidades incríveis. Seus rugidos aterrorizam inimigos.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/373.png"
+  },
+  metagross: {
+    tipo: "Metálico/Psíquico",
+    nivel: 45,
+    descricao: "Composto de 4 Metagross unidos, suas mentes combinadas tornam-no um supercomputador.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/376.png"
+  },
+  dialga: {
+    tipo: "Aço/Dragão",
+    nivel: 70,
+    descricao: "Um lendário Pokémon que governa o tempo. Sua respiração congela o ar ao seu redor.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/483.png"
+  },
+  palkia: {
+    tipo: "Água/Dragão",
+    nivel: 70,
+    descricao: "Um lendário Pokémon que governa o espaço. Pode distorcer dimensões para sua vantagem.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/484.png"
+  },
+  giratina: {
+    tipo: "Fantasma/Dragão",
+    nivel: 70,
+    descricao: "Um lendário Pokémon que vive em um mundo distorcido. Sua forma original é desconhecida.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/487.png"
+  },
+  arceus: {
+    tipo: "Normal",
+    nivel: 100,
+    descricao: "O criador do universo Pokémon. Pode assumir qualquer tipo com a sua Placa Multitipo.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/493.png"
+  },
+  zekrom: {
+    tipo: "Elétrico/Dragão",
+    nivel: 70,
+    descricao: "Um lendário Pokémon que controla o trovão. Diz-se que pode gerar energia ilimitada.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/644.png"
+  },
+  reshiram: {
+    tipo: "Fogo/Dragão",
+    nivel: 70,
+    descricao: "Um lendário Pokémon que gera fogo ao respirar. Pode queimar tudo ao seu redor.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/643.png"
+  },
+  kyurem: {
+    tipo: "Gelo/Dragão",
+    nivel: 70,
+    descricao: "Um lendário Pokémon que pode absorver energia de qualquer coisa. Pode congelar seu inimigo solidamente.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/646.png"
+  },
+  genesect: {
+    tipo: "Inseto/Metálico",
+    nivel: 50,
+    descricao: "Um Pokémon que foi modificado por cientistas antigos. Usa um canhão em seu dorso.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/649.png"
+  },
+  xerneas: {
+    tipo: "Fada",
+    nivel: 70,
+    descricao: "Um lendário Pokémon que tem o poder de conceder vida eterna. Emite uma luz brilhante.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/716.png"
+  },
+  yveltal: {
+    tipo: "Escuridão/Voador",
+    nivel: 70,
+    descricao: "Um lendário Pokémon que absorve a vida ao seu redor. Pode desencadear devastação quando se enfurece.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/717.png"
+  },
+  zygarde: {
+    tipo: "Terrestre/Dragão",
+    nivel: 70,
+    descricao: "Um lendário Pokémon que mantém a ordem natural. Pode reorganizar suas células.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/718.png"
+  },
+  magearna: {
+    tipo: "Metálico/Fada",
+    nivel: 50,
+    descricao: "Um Pokémon artificial que gosta de coletar itens brilhantes. Tem um coração mecânico.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/801.png"
+  },
+  marshadow: {
+    tipo: "Lutador/Fantasma",
+    nivel: 50,
+    descricao: "Um Pokémon mítico que pode se mover através das sombras. Dizem que evoca pesadelos terríveis.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/802.png"
+  },
+  zeraora: {
+    tipo: "Elétrico",
+    nivel: 50,
+    descricao: "Um Pokémon veloz que pode criar campos de eletricidade. Tem uma personalidade aventureira.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/807.png"
+  },
+  meltan: {
+    tipo: "Metálico",
+    nivel: 30,
+    descricao: "Um Pokémon misterioso feito de metal líquido. Seus olhos brilham com uma luz azul misteriosa.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/808.png"
+  },
+  melmetal: {
+    tipo: "Metálico",
+    nivel: 50,
+    descricao: "Um Pokémon imenso e poderoso. Pode absorver metal para aumentar seus próprios poderes.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/809.png"
+  },
+  grookey: {
+    tipo: "Grama",
+    nivel: 10,
+    descricao: "Tem uma habilidade especial para bater em ritmo com coisas à sua volta. Adora um bom tamborilar.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/810.png"
+  },
+  thwackey: {
+    tipo: "Grama",
+    nivel: 30,
+    descricao: "Bate em tambores com galhos. Pode evocar grama para criar barreiras protetoras.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/811.png"
+  },
+  rillaboom: {
+    tipo: "Grama",
+    nivel: 50,
+    descricao: "Um mestre do ritmo que pode controlar plantas usando seus tambores. Tem um poderoso rugido.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/812.png"
+  },
+  scorbunny: {
+    tipo: "Fogo",
+    nivel: 10,
+    descricao: "Sempre correndo. Ele pode acender uma chama na sua barriga e correr a velocidades incríveis.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/813.png"
+  },
+  raboot: {
+    tipo: "Fogo",
+    nivel: 30,
+    descricao: "Ele é rápido e ágil. Quando luta, sua velocidade aumenta ainda mais.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/814.png"
+  },
+  cinderace: {
+    tipo: "Fogo",
+    nivel: 50,
+    descricao: "Rápido como um raio. Usa seu ágil corpo para esquivar-se de ataques enquanto ataca rapidamente.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/815.png"
+  },
+  sobble: {
+    tipo: "Água",
+    nivel: 10,
+    descricao: "Ele é tímido e gosta de se esconder. Quando ele se sente ameaçado, se dissolve na água.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/816.png"
+  },
+  drizzile: {
+    tipo: "Água",
+    nivel: 30,
+    descricao: "Ele controla gotas de água com habilidade. Pode criar nuvens de água para se esconder.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/817.png"
+  },
+  inteleon: {
+    tipo: "Água",
+    nivel: 50,
+    descricao: "Ele é um atirador de elite. Usa suas balas de água para acertar alvos a longa distância.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/818.png"
+  },
+  skwovet: {
+    tipo: "Normal",
+    nivel: 10,
+    descricao: "Adora comida. Quando encontra algo delicioso, esconde o alimento em algum lugar.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/819.png"
+  },
+  greedent: {
+    tipo: "Normal",
+    nivel: 30,
+    descricao: "É muito ganancioso. Esconde comida em todos os lugares para não faltar quando estiver com fome.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/820.png"
+  },
+  rookidee: {
+    tipo: "Voador",
+    nivel: 10,
+    descricao: "Um bom estrategista. Sempre observa o ambiente e escolhe o momento certo para atacar.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/821.png"
+  },
+  corvisquire: {
+    tipo: "Voador",
+    nivel: 30,
+    descricao: "Extremamente fiel ao seu treinador. Protege o treinador com unhas e dentes se for necessário.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/822.png"
+  },
+  corviknight: {
+    tipo: "Voador/Aço",
+    nivel: 50,
+    descricao: "Um cavaleiro do ar. Possui uma grande inteligência estratégica e força impressionante.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/823.png"
+  },
+  blipbug: {
+    tipo: "Inseto",
+    nivel: 10,
+    descricao: "Ele se move em grupo. Se um deles encontrar comida, todos os outros chegarão lá em pouco tempo.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/824.png"
+  },
+  dottler: {
+    tipo: "Inseto/Psíquico",
+    nivel: 30,
+    descricao: "Ele pode prever o futuro usando a luz que emite do corpo.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/825.png"
+  },
+  orbeetle: {
+    tipo: "Inseto/Psíquico",
+    nivel: 50,
+    descricao: "É um mestre da estratégia. Pode controlar até mesmo os movimentos de seus inimigos.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/826.png"
+  },
+  nickit: {
+    tipo: "Escuro",
+    nivel: 10,
+    descricao: "Ele é muito esperto e habilidoso em roubar. Rouba comida de outras pessoas para se alimentar.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/827.png"
+  },
+  thievul: {
+    tipo: "Escuro",
+    nivel: 30,
+    descricao: "Sabe exatamente o que fazer para roubar. Ele usa truques e artimanhas engenhosas.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/828.png"
+  },
+  gossifleur: {
+    tipo: "Planta",
+    nivel: 10,
+    descricao: "Seu pólen é poderoso o suficiente para curar uma pessoa doente ou ferida.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/829.png"
+  },
+  eldegoss: {
+    tipo: "Planta",
+    nivel: 30,
+    descricao: "Quando está em perigo, espalha seu pólen em volta para se proteger.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/830.png"
+  },
+  wooloo: {
+    tipo: "Normal",
+    nivel: 10,
+    descricao: "Tem um corpo muito macio. É tão fofinho que todos querem abraçá-lo.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/831.png"
+  },
+  dubwool: {
+    tipo: "Normal",
+    nivel: 30,
+    descricao: "Pode proteger o seu treinador de qualquer perigo, mesmo que seja um perigo mortal.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/832.png"
+  },
+  chewtle: {
+    tipo: "Água",
+    nivel: 10,
+    descricao: "Tem mandíbulas poderosas. Ele é muito territorial e não gosta de compartilhar seu espaço.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/833.png"
+  },
+  drednaw: {
+    tipo: "Água/Rocha",
+    nivel: 30,
+    descricao: "Um forte casco de defesa. Ele ataca qualquer coisa que chegue perto de sua território.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/834.png"
+  },
+  yamper: {
+    tipo: "Elétrico",
+    nivel: 10,
+    descricao: "Ele ama pegar coisas brilhantes. Corre atrás de ladrões e traz de volta o que roubaram.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/835.png"
+  },
+  boltund: {
+    tipo: "Elétrico",
+    nivel: 30,
+    descricao: "Um corredor muito rápido. Pode ultrapassar qualquer outro Pokémon na corrida.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/836.png"
+  },
+  rolycoly: {
+    tipo: "Rocha",
+    nivel: 10,
+    descricao: "Ele se move rolando. Pode rolar a uma velocidade de 60 km/h.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/837.png"
+  },
+  carkol: {
+    tipo: "Rocha/Fogo",
+    nivel: 30,
+    descricao: "É muito ativo. Pode atravessar montanhas íngremes a uma velocidade incrível.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/838.png"
+  },
+  coalossal: {
+    tipo: "Rocha/Fogo",
+    nivel: 50,
+    descricao: "Um gigante rochoso. Se ele desmoronar em uma montanha, levará anos para recuperá-la.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/839.png"
+  },
+  applin: {
+    tipo: "Planta/Dragão",
+    nivel: 10,
+    descricao: "Gosta de coletar maçãs doces. Se esconde em uma maçã e engana outros Pokémon.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/840.png"
+  },
+  flapple: {
+    tipo: "Planta/Dragão",
+    nivel: 30,
+    descricao: "Tem gosto de maçã azeda. Voa muito alto e cai de cima para surpreender os inimigos.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/841.png"
+  },
+  appletun: {
+    tipo: "Planta/Dragão",
+    nivel: 30,
+    descricao: "Sabe a maçã doce. Pode disparar sementes de maçã como balas em alta velocidade.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/842.png"
+  },
+  silicobra: {
+    tipo: "Terra",
+    nivel: 10,
+    descricao: "Ele enterra seu corpo na areia para se esconder. Vai atacar seus inimigos de surpresa.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/843.png"
+  },
+  sandaconda: {
+    tipo: "Terra",
+    nivel: 30,
+    descricao: "Um mestre da camuflagem. Pode se mover rapidamente na areia sem ser detectado.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/844.png"
+  },
+  cramorant: {
+    tipo: "Voador/Água",
+    nivel: 30,
+    descricao: "Um bom pescador. Usa sua boca para mergulhar na água e pegar peixes.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/845.png"
+  },
+  arrokuda: {
+    tipo: "Água",
+    nivel: 10,
+    descricao: "Nada em um grupo. Todos estão tentando comer um peixe maior que os outros.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/846.png"
+  },
+  barraskewda: {
+    tipo: "Água",
+    nivel: 30,
+    descricao: "O mais rápido nadador. Pode capturar qualquer presa antes que ela perceba.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/847.png"
+  },
+  toxel: {
+    tipo: "Elétrico/Venenoso",
+    nivel: 20,
+    descricao: "Toca guitarra com sua língua. Ele está em um estágio de crescimento muito alto.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/848.png"
+  },
+  toxtricity: {
+    tipo: "Elétrico/Venenoso",
+    nivel: 50,
+    descricao: "A música de suas costas é muito alta. Pode causar dor de cabeça até mesmo para pessoas.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/849.png"
+  },
+  sizzlipede: {
+    tipo: "Fogo/Inseto",
+    nivel: 10,
+    descricao: "Gosta de lugares quentes. Se você quiser fazer amizade com ele, deve criar um ambiente quente.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/850.png"
+  },
+  centiskorch: {
+    tipo: "Fogo/Inseto",
+    nivel: 30,
+    descricao: "Pode se mover muito rapidamente, mas é vulnerável ao frio. Ele dorme durante o inverno.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/851.png"
+  },
+  clobbopus: {
+    tipo: "Lutador",
+    nivel: 20,
+    descricao: "Um especialista em lutar com os punhos. Ele tenta usar movimentos que só ele conhece.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/852.png"
+  },
+  grapploct: {
+    tipo: "Lutador",
+    nivel: 50,
+    descricao: "Pode dominar qualquer adversário com técnicas de luta livre.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/853.png"
+  },
+  sinistea: {
+    tipo: "Fantasma",
+    nivel: 10,
+    descricao: "Gosta de coletar chá. Especialistas dizem que ele também tem uma atmosfera de outro mundo.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/854.png"
+  },
+  polteageist: {
+    tipo: "Fantasma",
+    nivel: 30,
+    descricao: "Habilitado para falar. Faz chá usando seu próprio corpo.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/855.png"
+  },
+  hatenna: {
+    tipo: "Psíquico",
+    nivel: 10,
+    descricao: "Ele pode ter emoções e pensamentos. Pode sentir a atmosfera do mundo com seu chapéu.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/856.png"
+  },
+  hattrem: {
+    tipo: "Psíquico",
+    nivel: 30,
+    descricao: "Ele gosta de coletar emoções das pessoas. Ele pode fazer as pessoas ao redor de si mesmas felizes.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/857.png"
+  },
+  hatterene: {
+    tipo: "Psíquico/Fada",
+    nivel: 50,
+    descricao: "Gosta de ler a mente das pessoas. Ele pode encontrar informações que você não quer revelar.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/858.png"
+  },
+  impidimp: {
+    tipo: "Escuro/Fada",
+    nivel: 20,
+    descricao: "Faz travessuras. Gosta de brincar com os outros, como roubar seus pertences.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/859.png"
+  },
+  morgrem: {
+    tipo: "Escuro/Fada",
+    nivel: 30,
+    descricao: "É mais escuro e mais perigoso. Ele pode fazer brincadeiras que podem ser problemáticas para as pessoas.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/860.png"
+  },
+  grimmsnarl: {
+    tipo: "Escuro/Fada",
+    nivel: 50,
+    descricao: "É muito aterrador. Ele assusta as pessoas e faz brincadeiras que são além do normal.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/861.png"
+  },
+  obstagoon: {
+    tipo: "Escuro/Normal",
+    nivel: 50,
+    descricao: "Gosta de lutar. Ele gosta de lutar até a exaustão e tomar a vitória ao seu inimigo.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/862.png"
+  },
+  perrserker: {
+    tipo: "Aço",
+    nivel: 30,
+    descricao: "Gosta de dinheiro. Ele está sempre procurando coisas brilhantes para coletar.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/863.png"
+  },
+  cursola: {
+    tipo: "Fantasma",
+    nivel: 50,
+    descricao: "Muito fraco. Devido ao desaparecimento de coral, este Pokémon está em perigo de extinção.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/864.png"
+  },
+  sirfetchd: {
+    tipo: "Lutador",
+    nivel: 50,
+    descricao: "Gosta de treinar. Pode controlar sua espada com uma técnica excelente.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/865.png"
+  },
+  mr_rime: {
+    tipo: "Gelo/Psíquico",
+    nivel: 50,
+    descricao: "Gosta de dançar. Ele pode fazer qualquer um sorrir com sua performance.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/866.png"
+  },
+  runerigus: {
+    tipo: "Fantasma/Terra",
+    nivel: 50,
+    descricao: "Ele tem uma armadura que não pode ser quebrada. As pessoas que viram seu rosto morreram com horror.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/867.png"
+  },
+  milcery: {
+    tipo: "Fada",
+    nivel: 10,
+    descricao: "Ele faz chantilly com seu corpo. Quando ele fica bravo, ele espalha creme.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/868.png"
+  },
+  alcremie: {
+    tipo: "Fada",
+    nivel: 30,
+    descricao: "Ele adora fazer bolos. Ele pode fazer qualquer tipo de bolo.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/869.png"
+  },
+  falinks: {
+    tipo: "Lutador",
+    nivel: 30,
+    descricao: "Gosta de lutar em grupo. A força do grupo é mais forte.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/870.png"
+  },
+  pincurchin: {
+    tipo: "Elétrico",
+    nivel: 30,
+    descricao: "Usa espinhos para proteger-se. Se você tocar acidentalmente, você será ferido.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/871.png"
+  },
+  snom: {
+    tipo: "Gelo/Inseto",
+    nivel: 20,
+    descricao: "Ele faz ninho na neve. Ele pode usar a frieza do inverno para proteger-se.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/872.png"
+  },
+  frosmoth: {
+    tipo: "Gelo/Inseto",
+    nivel: 50,
+    descricao: "É muito bonito. Ele pode parar o ar para criar belos padrões de flocos de neve.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/873.png"
+  },
+  stonjourner: {
+    tipo: "Rocha",
+    nivel: 50,
+    descricao: "Gosta de rochas gigantes. As pessoas o vêem há muito tempo, dizem que é um mensageiro.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/874.png"
+  },
+  eiscue: {
+    tipo: "Gelo",
+    nivel: 30,
+    descricao: "Ele faz um chapéu com um bloco de gelo. Quando o bloco de gelo derrete, ele faz outro novo.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/875.png"
+  },
+  indeedee: {
+    tipo: "Psíquico/Normal",
+    nivel: 30,
+    descricao: "Ele atua como um mordomo ou governanta. Ele é muito bom em se comunicar com as pessoas.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/876.png"
+  },
+  morpeko: {
+    tipo: "Elétrico/Escuro",
+    nivel: 30,
+    descricao: "Gosta de lanches doces. Mas quando está com fome, ele fica violento.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/877.png"
+  },
+  cufant: {
+    tipo: "Metal",
+    nivel: 30,
+    descricao: "Adora coisas de metal. Pode criar metal usando seu nariz.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/878.png"
+  },
+  copperajah: {
+    tipo: "Metal",
+    nivel: 50,
+    descricao: "Ele tem um nariz muito forte. Pode quebrar pedras e ferro.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/879.png"
+  },
+  dracozolt: {
+    tipo: "Elétrico/Dragão",
+    nivel: 50,
+    descricao: "Ele é uma combinação de fóssil de Dragão e Elétrico. Tem uma velocidade incrível.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/880.png"
+  },
+  arctozolt: {
+    tipo: "Elétrico/Gelo",
+    nivel: 50,
+    descricao: "É uma combinação de fóssil de Gelo e Elétrico. Ele pode esfriar o ar em volta dele.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/881.png"
+  },
+  dracovish: {
+    tipo: "Água/Dragão",
+    nivel: 50,
+    descricao: "É uma combinação de fóssil de Dragão e Água. Pode respirar na água.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/882.png"
+  },
+  arctovish: {
+    tipo: "Água/Gelo",
+    nivel: 50,
+    descricao: "É uma combinação de fóssil de Gelo e Água. Pode esfriar a água em volta dele.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/883.png"
+  },
+  duraludon: {
+    tipo: "Aço/Dragão",
+    nivel: 50,
+    descricao: "Gosta de dormir no alto da montanha. Ele faz seu ninho com aço duro e rochas.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/884.png"
+  },
+  dreepy: {
+    tipo: "Dragão/Fantasma",
+    nivel: 30,
+    descricao: "Gosta de descansar no fundo do oceano. Se ele se esforça muito, ele pode desaparecer.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/885.png"
+  },
+  drakloak: {
+    tipo: "Dragão/Fantasma",
+    nivel: 50,
+    descricao: "É mais rápido que um dragão normal. Pode ultrapassar o céu em um instante.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/886.png"
+  },
+  dragapult: {
+    tipo: "Dragão/Fantasma",
+    nivel: 50,
+    descricao: "Um vôo incrível. Ele pode pegar os inimigos em sua armadilha e, em seguida, lançá-los no ar.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/887.png"
+  },
+  zacian: {
+    tipo: "Fada",
+    nivel: 70,
+    descricao: "Ele tem uma espada na boca. Ele é um Pokémon muito forte.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/888.png"
+  },
+  zamazenta: {
+    tipo: "Lutador",
+    nivel: 70,
+    descricao: "Ele tem um escudo nas costas. Ele é um Pokémon muito forte.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/889.png"
+  },
+  eternatus: {
+    tipo: "Venenoso/Dragão",
+    nivel: 60,
+    descricao: "Gosta de viver em cavernas. Tem uma aparência misteriosa.",
+    imagem: "https://assets.pokemon.com/assets/cms2/img/pokedex/full/890.png"
+},
+
+};
+ 
+function loadYouTubePlayer() {
+    var tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+  }
+
+ 
+
+
+var player;
+
+
+function onYouTubeIframeAPIReady() {
+    player = new YT.Player('player', {
+        height: '0',
+        width: '0',
+        videoId: 'LzmlpAjMpHs',
+        events: {
+            'onReady': onPlayerReady
+        }
+    });
+}
+
+
+function onPlayerReady(event) {
+    
+}
+
+
+function playPokemonMusic() {
+    if (player) {
+        player.playVideo();
+    } else {
+        loadYouTubePlayer();
+    }
+}
+
+document.getElementById("registrarPokemon").addEventListener("click", function() {
+  const nome = document.getElementById("nome_pokemon").value.toLowerCase();
+  const modelo = document.getElementById("modelo").content.cloneNode(true);
+
+  if (pokedex[nome]) {
+    modelo.querySelector(".pokedex_img").src = pokedex[nome].imagem;
+    modelo.querySelector(".nome_pokemon").textContent += nome.charAt(0).toUpperCase() + nome.slice(1);
+    modelo.querySelector(".tipo_pokemon").textContent += pokedex[nome].tipo;
+    modelo.querySelector(".nivel_pokemon").textContent += pokedex[nome].nivel;
+    modelo.querySelector(".descricao_pokemon").textContent += pokedex[nome].descricao;
+
+    document.body.appendChild(modelo);
+  } else {
+    alert("Pokémon não encontrado na Pokédex.");
+  }
+});
+</script>
+</body>
+</html>
